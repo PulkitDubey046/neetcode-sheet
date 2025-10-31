@@ -13,5 +13,3 @@ This repo contains my solutions, explanations, and notes for the **[NeetCode 150
 
 ---
 
-## 🗂️ Repository Structure
-
