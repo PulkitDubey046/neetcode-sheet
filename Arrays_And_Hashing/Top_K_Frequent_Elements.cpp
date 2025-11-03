@@ -10,6 +10,8 @@
 
 #include <vector>
 #include <algorithm>
+#include <unordered_map>
+#include <queue>
 using namespace std;
 
 class SolutionSort {
@@ -20,20 +22,21 @@ public:
 
         int count = 1;
         for (int i = 1; i <= nums.size(); i++) {
-            if (i < nums.size() && nums[i] == nums[i - 1])
+            if (i < (int)nums.size() && nums[i] == nums[i - 1])
                 count++;
             else {
-                freq.push_back({nums[i - 1], count});
+                freq.push_back(make_pair(nums[i - 1], count));
                 count = 1;
             }
         }
 
-        sort(freq.begin(), freq.end(), [](auto& a, auto& b) {
-            return a.second > b.second;
-        });
+        sort(freq.begin(), freq.end(), 
+            [](const pair<int, int>& a, const pair<int, int>& b) {
+                return a.second > b.second;
+            });
 
         vector<int> ans;
-        for (int i = 0; i < k && i < freq.size(); i++)
+        for (int i = 0; i < k && i < (int)freq.size(); i++)
             ans.push_back(freq[i].first);
 
         return ans;
@@ -47,9 +50,6 @@ public:
 // Space Complexity: O(n)
 // ------------------------------------------------------------
 
-#include <unordered_map>
-#include <queue>
-
 class SolutionHeap {
 public:
     vector<int> topKFrequent(vector<int>& nums, int k) {
@@ -58,11 +58,12 @@ public:
             freq[n]++;
 
         priority_queue<pair<int, int>> maxHeap;
-        for (auto& [num, count] : freq)
-            maxHeap.push({count, num});
+        for (unordered_map<int, int>::iterator it = freq.begin(); it != freq.end(); ++it) {
+            maxHeap.push(make_pair(it->second, it->first));
+        }
 
         vector<int> ans;
-        while (k-- && !maxHeap.empty()) {
+        while (k-- > 0 && !maxHeap.empty()) {
             ans.push_back(maxHeap.top().second);
             maxHeap.pop();
         }
